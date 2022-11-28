@@ -1,0 +1,77 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-sizing: border-box;
+}
+a{
+  text-decoration: none;
+  color: #000;
+}
+ol,
+ul {
+  list-style: none;
+  li{
+    margin: 0;
+  }
+}
+// @font-face {
+//   font-family: "Futura";
+//   src: url("../assets/fonts/Futura.ttf");
+// }
+// .fontfamily_en {
+//   font-family: Futura !important;
+// }
+html,
+body {
+  // font-family: Futura;
+  font-size: 0.18rem;
+  color: #fff;
+  // background: #353536;
+}
+::-webkit-scrollbar {
+  width: 0.05rem;
+  height: 0.05rem;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 0.05rem;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 1);
+}
+input,
+button {
+  background: none;
+  outline: none;
+  border: 0;
+  caret-color: white;
+}
+pre {
+  white-space: pre-line;
+  word-break: break-all;
+  word-wrap: break-word;
+  font-family: inherit;
+}
+.text_ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+}
+.el-card-define {
+  min-height: 5rem;
+  height: 100%;
+}
+.el-card-define >>> .el-card__body {
+  height: 100%;
+}
+@media screen and (max-width: 750px) {
+  ::-webkit-scrollbar {
+    width: 0.02rem;
+    height: 0.02rem;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 0.02rem;
+  }
+}

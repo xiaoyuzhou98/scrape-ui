@@ -1,7 +1,5 @@
 <template>
   <section class="page">
-    <!-- <el-switch v-model="updated"></el-switch> -->
-
     <ul class="imageList" v-if="images.length">
       <li v-for="(image, index) in images" :key="index">
         <el-card shadow="hover">
@@ -105,12 +103,6 @@ export default {
       });
   },
   methods: {
-    // findObj(obj, arr) {
-    //   for (let arrObj of arr) {
-    //     if (arrObj.user === obj.user && arrObj.url === obj.url) return true;
-    //   }
-    //   return false;
-    // },
     openDialog(image) {
       this.dialogVisible = true;
       this.src = image.src;

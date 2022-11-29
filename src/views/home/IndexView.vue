@@ -23,6 +23,12 @@
           <el-option v-for="item in form.options2" :key="item.value" :label="item.label" :value="item.value"> </el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="背景音乐">
+        <input type="file" id="file" hidden @change="fileChange" accept=".mp3" />
+        <el-input placeholder="添加背景音乐" v-model="form.bgm" class="input-with-select" :disabled="isLaunch || form.handle">
+          <el-button slot="append" icon="el-icon-microphone" type="success" @click="btnChange"></el-button>
+        </el-input>
+      </el-form-item>
       <el-form-item>
         <el-button v-loading="isLaunch" class="launch" type="primary" @click="launch" :disabled="form.tags.length === 0">启动</el-button>
         <span class="already" v-show="isLaunch">已开启{{ second }}秒</span>
@@ -46,6 +52,7 @@ export default {
         tags: [],
         amount: 1,
         handle: false,
+        bgm: "",
         options1: [
           {
             value: 15,
@@ -177,7 +184,7 @@ export default {
         });
 
       if (!this.form.handle) {
-        const video = await this.$api.getTweetsVideo(item.url, this.form.duration);
+        const video = await this.$api.getTweetsVideo(item.url, this.form.duration,this.form.bgm);
         console.log("New tweet video saved: ", video);
         this.$message({
           message: `New tweet video saved: ${video}`,
@@ -275,6 +282,19 @@ export default {
         type: "success",
         duration: 4000,
       });
+    },
+    fileChange() {
+      try {
+        const fu = document.getElementById("file");
+        if (fu == null) return;
+        this.form.bgm = fu.files[0].path;
+      } catch (error) {
+        console.debug("choice file err:", error);
+      }
+    },
+    btnChange() {
+      var file = document.getElementById("file");
+      file.click();
     },
   },
 };

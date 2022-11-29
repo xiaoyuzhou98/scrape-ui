@@ -97,6 +97,7 @@ app.post("/tweets/screenshot", (req, res) => {
     const page = (await browser.pages())[0];
     await page.setViewport({ width: 1280, height: 1024 });
     await page.setDefaultNavigationTimeout(25000);
+
     try {
       await page.goto(url, { waitUntil: "networkidle0" });
       const tweetElem = await page.$("article");
@@ -108,6 +109,9 @@ app.post("/tweets/screenshot", (req, res) => {
         // quality: 100,
       });
       // console.log("ok");
+      console.log("Done!");
+
+      res.status(200).send(`${savePath}\\${filename}.png`);
     } catch (error) {
       if (error.name === "TimeoutError") {
         res.status(404).send({ error: "Timeout,please check proxy address" });
@@ -117,14 +121,12 @@ app.post("/tweets/screenshot", (req, res) => {
     }
 
     await browser.close();
-    console.log("Done!");
-    res.status(200).send(`${savePath}\\${filename}.png`);
   });
 });
 
 app.post("/tweets/video", (req, res) => {
   const loop = req.body.loop || 5;
-  const url = req.body.url;
+  const { url, bgm } = req.body;
   const filename = [url.split("/")[3], url.split("/")[5]].join("_");
   const savePath = config.savePath ? `${config.savePath}\\videos` : path.resolve(".\\videos");
   const savePathImg = config.savePath ? `${config.savePath}\\images` : path.resolve(".\\images");
@@ -135,14 +137,13 @@ app.post("/tweets/video", (req, res) => {
       }
     });
   }
-
-  ffmpeg(`${savePathImg}\\${filename}.png`)
-    // .inputFPS(25)
-    .loop(loop)
-    .videoCodec("libx264")
-    .on("error", function (error) {
-      res.status(404).send({ error: "ffmpeg error" });
-    })
+  const ff = ffmpeg().addInput(`${savePathImg}\\${filename}.png`).loop(loop);
+  if (bgm) {
+    ff.addInput(bgm);
+  }
+  ff.on("error", function (error) {
+    res.status(404).send({ error: "ffmpeg error" });
+  })
     .on("end", function () {
       console.log("Convert successful, saved in videos folder");
       res.status(200).send(`${savePath}\\${filename}.mp4`);

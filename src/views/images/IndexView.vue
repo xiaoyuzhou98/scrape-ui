@@ -29,6 +29,12 @@
             <el-option v-for="item in form.options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="背景音乐">
+          <input type="file" id="file" hidden @change="fileChange" accept=".mp3" />
+          <el-input placeholder="添加背景音乐" v-model="form.bgm" class="input-with-select">
+            <el-button slot="append" icon="el-icon-microphone" type="success" @click="btnChange"></el-button>
+          </el-input>
+        </el-form-item>
         <el-form-item>
           <el-button v-loading="isStart" @click="start">生成</el-button>
         </el-form-item>
@@ -55,6 +61,7 @@ export default {
       isStart: false,
       form: {
         duration: "",
+        bgm: "",
         options: [
           {
             value: 10,
@@ -116,9 +123,13 @@ export default {
     },
     async start() {
       this.isStart = true;
-      const video = await this.$api.getTweetsVideo(this.url, this.form.duration);
+      const video = await this.$api.getTweetsVideo(this.url, this.form.duration,this.form.bgm);
       console.log("New tweet video saved: ", video);
-      this.$message(`New tweet video saved: ${video}`);
+      this.$message({
+        message: `New tweet video saved: ${video}`,
+        type: "success",
+        duration: 4000,
+      });
       this.updatingList = this.updatingList.filter((item) => {
         return item.url !== this.url;
       });
@@ -130,6 +141,19 @@ export default {
     },
     open() {
       shell.openPath(this.path);
+    },
+    fileChange() {
+      try {
+        const fu = document.getElementById("file");
+        if (fu == null) return;
+        this.form.bgm = fu.files[0].path;
+      } catch (error) {
+        console.debug("choice file err:", error);
+      }
+    },
+    btnChange() {
+      var file = document.getElementById("file");
+      file.click();
     },
   },
 };

@@ -15,11 +15,10 @@
         </el-card>
       </li>
     </ul>
-    <el-dialog :title="link" :visible.sync="dialogVisible" width="40%">
+    <el-dialog :title="link" :visible.sync="dialogVisible" width="40%" v-if="dialogVisible">
       <video
         autoplay
         controls
-        muted
         width="100%"
         x5-video-player-type="h5"
         playsinline="true"

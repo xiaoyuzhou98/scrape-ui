@@ -17,13 +17,14 @@ export default {
     return service.post(`${prefix}/tweets/screenshot`, { url });
   },
 
-  getTweetsVideo(url: string, loop: string) {
-    const data = {
-      url,
-      loop,
-    };
-    // return service.post("api/tweets/video", data);
-    return service.post(`${prefix}/tweets/video`, data);
+  getTweetsVideo(url: string, loop: string, bgm: string) {
+    // const data = {
+    //   url,
+    //   loop,
+    //   src,
+    // };
+    // return service.post("api/tweets/video", data);    
+    return service.post(`${prefix}/tweets/video`, { url, loop, bgm });
   },
 
   getLocalImages() {
@@ -35,11 +36,11 @@ export default {
   },
 
   updateConfig(proxy: string, savePath: string) {
-    const data = {
-      proxy,
-      savePath,
-    };
+    // const data = {
+    //   proxy,
+    //   savePath,
+    // };
     // return service.post("api/tweets/video", data);
-    return service.post(`${prefix}/config`, data);
+    return service.post(`${prefix}/config`, { proxy, savePath });
   },
 };

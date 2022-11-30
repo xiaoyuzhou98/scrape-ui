@@ -2,7 +2,7 @@
   <div class="page">
     <el-form ref="form" :model="form" label-width="100px">
       <el-form-item class="user" label="ip地址">
-        <el-input v-model="form.proxy" placeholder="配置代理ip地址" @keyup.native.enter="addTag" :disabled="!isEdit"></el-input>
+        <el-input v-model="form.proxy" placeholder="配置代理ip地址" @keyup.native.enter="save" :disabled="!isEdit"></el-input>
       </el-form-item>
 
       <el-form-item label="保存路径">
@@ -14,7 +14,7 @@
 
       <el-form-item>
         <el-button @click="isEdit = true" v-if="!isEdit" :disabled="isLaunch">修改</el-button>
-        <el-button @click="save" v-else>保存</el-button>
+        <el-button @click="save"  v-else>保存</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -34,7 +34,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getConfig",'isLaunch']),
+    ...mapGetters(["getConfig", "isLaunch"]),
   },
   watch: {
     getConfig: {

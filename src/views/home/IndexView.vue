@@ -120,6 +120,7 @@ export default {
       if (!this.oldList.length) {
         console.log("replace");
         status = true;
+        this.oldList = newList;
         for (let item of newList) {
           console.log(`New url got from ${item.user}:\n${item.url}`);
           this.$message({
@@ -127,10 +128,9 @@ export default {
             type: "success",
             duration: 4000,
           });
-          this.getNewTweetsScreenshotsAndVideo(item);
+          this.getNewTweetsScreenshotsAndVideo(item, 0);
         }
-        this.oldList = newList;
-        localStorage.setItem("urlList", JSON.stringify(this.oldList));
+        // localStorage.setItem("urlList", JSON.stringify(this.oldList));
       } else {
         newList.forEach((newItem) => {
           if (!this.$utils.findObj(newItem, this.oldList)) {
@@ -153,16 +153,15 @@ export default {
               type: "success",
               duration: 4000,
             });
-            this.getNewTweetsScreenshotsAndVideo(newItem);
-
-            localStorage.setItem("urlList", JSON.stringify(this.oldList));
+            this.getNewTweetsScreenshotsAndVideo(newItem, 1);
+            // localStorage.setItem("urlList", JSON.stringify(this.oldList));
           }
         });
       }
       return status;
     },
 
-    async getNewTweetsScreenshotsAndVideo(item) {
+    async getNewTweetsScreenshotsAndVideo(item, type) {
       item = JSON.parse(JSON.stringify(item));
       await this.$api
         .getTweetsScreenshot(item.url)
@@ -173,6 +172,7 @@ export default {
             type: "success",
             duration: 4000,
           });
+          localStorage.setItem("urlList", JSON.stringify(this.oldList));
         })
         .catch((e) => {
           this.$message({
@@ -180,11 +180,16 @@ export default {
             type: "error",
             duration: 4000,
           });
+          if (type === 0) {
+            this.oldList = [];
+          } else {
+            this.oldList.pop();
+          }
           return;
         });
 
       if (!this.form.handle) {
-        const video = await this.$api.getTweetsVideo(item.url, this.form.duration,this.form.bgm);
+        const video = await this.$api.getTweetsVideo(item.url, this.form.duration, this.form.bgm);
         console.log("New tweet video saved: ", video);
         this.$message({
           message: `New tweet video saved: ${video}`,

@@ -100,15 +100,20 @@ app.post("/tweets/screenshot", (req, res) => {
 
     try {
       await page.goto(url, { waitUntil: "networkidle0" });
-      const tweetElem = await page.$("article");
-
+      await page.$eval(".css-1dbjc4n.r-l5o3uw.r-1upvrn0", (el, value) => el.setAttribute("style", value), "display: none");
+      const tweetElem = await page.waitForSelector("article");
+      const { x, y, width, height } = await tweetElem.boundingBox();
       // let elementClip = await getElementDimensions(page, "article");
-      await tweetElem.screenshot({
+      await page.screenshot({
         path: `${savePath}\\${filename}.png`,
-        // clip: elementClip,
+        clip: {
+          x: x + 5,
+          y,
+          width,
+          height,
+        },
         // quality: 100,
       });
-      // console.log("ok");
       console.log("Done!");
 
       res.status(200).send(`${savePath}\\${filename}.png`);
@@ -116,10 +121,9 @@ app.post("/tweets/screenshot", (req, res) => {
       if (error.name === "TimeoutError") {
         res.status(404).send({ error: "Timeout,please check proxy address" });
       } else {
-        res.status(404).send({ error: error });
+        res.status(404).send({ error: "PROXY_CONNECTION_FAILED" });
       }
     }
-
     await browser.close();
   });
 });
